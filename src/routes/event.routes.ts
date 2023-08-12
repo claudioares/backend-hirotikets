@@ -5,18 +5,17 @@ import { EventUseCase } from '../useCase/event.use.case'
 
 class EventRoutes {
     public router: Router
-    private eventUseCase: EventUseCase
-    eventController: EventsControllers
+    private eventController: EventsControllers
     constructor(){
         this.router = Router()
         const eventsRepository = new EventRepositoryMongoose()
-        this.eventUseCase = new EventUseCase(eventsRepository)
-        this.eventController = new EventsControllers(this.eventUseCase)
+        const eventUseCase = new EventUseCase(eventsRepository)
+        this.eventController = new EventsControllers(eventUseCase)
         this.initRoutes()
     }
 
-    initRoutes() {
-        this.router.post('/')
+    initRoutes() {  
+        this.router.post('/', this.eventController.create.bind(this.eventController))
     }
 }
 
